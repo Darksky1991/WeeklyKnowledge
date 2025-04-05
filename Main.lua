@@ -474,7 +474,7 @@ function Main:GetMainColumns(unfiltered)
   ---@type WK_DataColumn[]
   local columns = {
     {
-      name = "Name",
+      name = "角色",
       onEnter = function(cellFrame)
         GameTooltip:SetOwner(cellFrame, "ANCHOR_RIGHT")
         GameTooltip:SetText("Name", 1, 1, 1);
@@ -486,7 +486,7 @@ function Main:GetMainColumns(unfiltered)
       onLeave = function()
         GameTooltip:Hide()
       end,
-      width = 90,
+      width = 120,
       toggleHidden = true,
       cell = function(character)
         local name = character.name
@@ -503,7 +503,7 @@ function Main:GetMainColumns(unfiltered)
       end,
     },
     {
-      name = "Realm",
+      name = "服务器",
       onEnter = function(cellFrame)
         GameTooltip:SetOwner(cellFrame, "ANCHOR_RIGHT")
         GameTooltip:SetText("Realm", 1, 1, 1);
@@ -515,14 +515,14 @@ function Main:GetMainColumns(unfiltered)
       onLeave = function()
         GameTooltip:Hide()
       end,
-      width = 90,
+      width = 120,
       toggleHidden = true,
       cell = function(character)
         return {text = character.realmName}
       end,
     },
     {
-      name = "Profession",
+      name = "专业",
       onEnter = function(cellFrame)
         GameTooltip:SetOwner(cellFrame, "ANCHOR_RIGHT")
         GameTooltip:SetText("Profession", 1, 1, 1);
@@ -541,7 +541,7 @@ function Main:GetMainColumns(unfiltered)
       end,
     },
     {
-      name = "Skill",
+      name = "技能点",
       onEnter = function(cellFrame)
         GameTooltip:SetOwner(cellFrame, "ANCHOR_RIGHT")
         GameTooltip:SetText("Skill", 1, 1, 1);
@@ -553,7 +553,7 @@ function Main:GetMainColumns(unfiltered)
       onLeave = function()
         GameTooltip:Hide()
       end,
-      width = 80,
+      width = 100,
       align = "CENTER",
       toggleHidden = true,
       cell = function(_, characterProfession)
@@ -561,7 +561,7 @@ function Main:GetMainColumns(unfiltered)
       end,
     },
     {
-      name = "Knowledge",
+      name = "知识点",
       onEnter = function(cellFrame)
         GameTooltip:SetOwner(cellFrame, "ANCHOR_RIGHT")
         GameTooltip:SetText("Knowledge Points", 1, 1, 1);
@@ -573,7 +573,7 @@ function Main:GetMainColumns(unfiltered)
       onLeave = function()
         GameTooltip:Hide()
       end,
-      width = 100,
+      width = 140,
       align = "CENTER",
       toggleHidden = true,
       cell = function(_, characterProfession, dataProfession)
@@ -682,7 +682,7 @@ function Main:GetMainColumns(unfiltered)
       onLeave = function()
         GameTooltip:Hide()
       end,
-      width = 90,
+      width = 70,
       toggleHidden = true,
       align = "CENTER",
       cell = function(character, characterProfession, profession)
@@ -765,7 +765,7 @@ function Main:GetMainColumns(unfiltered)
   end)
 
   table.insert(columns, {
-    name = "Catch-Up",
+    name = "追赶",
     onEnter = function(cellFrame)
       GameTooltip:SetOwner(cellFrame, "ANCHOR_RIGHT")
       GameTooltip:SetText("Catch-Up", 1, 1, 1);
@@ -780,7 +780,7 @@ function Main:GetMainColumns(unfiltered)
     onLeave = function()
       GameTooltip:Hide()
     end,
-    width = 80,
+    width = 110,
     align = "CENTER",
     toggleHidden = true,
     cell = function(character, characterProfession, profession)

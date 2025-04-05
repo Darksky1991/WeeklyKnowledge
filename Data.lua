@@ -79,56 +79,56 @@ Data.defaultCharacter = {
 Data.ObjectiveTypes = {
   {
     id = Enum.WK_Objectives.Unique,
-    name = "Uniques",
+    name = "唯一",
     description = "These are one-time knowledge point items found in treasures around the world and sold by Artisan/Renown/Kej vendors.\n\nRepeatable: " .. WHITE_FONT_COLOR:WrapTextInColorCode("No"),
     type = "item",
     repeatable = "No",
   },
   {
     id = Enum.WK_Objectives.Treatise,
-    name = "Treatise",
+    name = "论述",
     description = "These can be crafted by scribers. Send a Crafting Order if you don't have the inscription profession.\n\nRepeatable: " .. WHITE_FONT_COLOR:WrapTextInColorCode("Weekly"),
     type = "item",
     repeatable = "Weekly",
   },
   {
     id = Enum.WK_Objectives.ArtisanQuest,
-    name = "Artisan",
+    name = "任务",
     description = "Quest: Kala Clayhoof from Artisan's Consortium wants you to fulfill Crafting Orders.\n\nRepeatable: " .. WHITE_FONT_COLOR:WrapTextInColorCode("Weekly"),
     type = "quest",
     repeatable = "Weekly",
   },
   {
     id = Enum.WK_Objectives.Treasure,
-    name = "Treasure",
+    name = "宝藏",
     description = "These are randomly looted from treasures and dirt around the world.\n\nRepeatable: " .. WHITE_FONT_COLOR:WrapTextInColorCode("Weekly"),
     type = "item",
     repeatable = "Weekly",
   },
   {
     id = Enum.WK_Objectives.Gathering,
-    name = "Gathering",
+    name = "采集",
     description = "These are randomly looted from gathering nodes around the world. You may (not confirmed) randomly find additional items beyond the weekly limit.\n\nThese are also looted from Disenchanting.\n\nRepeatable: " .. WHITE_FONT_COLOR:WrapTextInColorCode("Weekly"),
     type = "item",
     repeatable = "Weekly",
   },
   {
     id = Enum.WK_Objectives.TrainerQuest,
-    name = "Trainer",
+    name = "训练师",
     description = "Quest: Complete a quest at your profession trainer.\n\nRepeatable: " .. WHITE_FONT_COLOR:WrapTextInColorCode("Weekly"),
     type = "quest",
     repeatable = "Weekly",
   },
   {
     id = Enum.WK_Objectives.DarkmoonQuest,
-    name = "Darkmoon",
+    name = "暗月马戏团",
     description = "Quest: Complete a quest at the Darkmoon Faire.\n\nRepeatable: " .. WHITE_FONT_COLOR:WrapTextInColorCode("Monthly"),
     type = "quest",
     repeatable = "Monthly",
   },
   {
     id = Enum.WK_Objectives.CatchUp,
-    name = "Catch-Up",
+    name = "追赶",
     description = "Keep track of your Knowledge Points progress and catch up on points from previous weeks.\n\nRepeatable: " .. WHITE_FONT_COLOR:WrapTextInColorCode("No"),
     type = "item",
     repeatable = "No",
@@ -353,7 +353,7 @@ Data.Objectives = {
 ---@type WK_Profession[]
 Data.Professions = {
   {
-    name = "Alchemy",
+    name = C_TradeSkillUI.GetTradeSkillDisplayName(171),
     skillLineID = 171,
     skillLineVariantID = 2871,
     spellID = 423321,
@@ -362,7 +362,7 @@ Data.Professions = {
     catchUpItemID = 228724,
   },
   {
-    name = "Blacksmithing",
+    name = C_TradeSkillUI.GetTradeSkillDisplayName(164),
     skillLineID = 164,
     skillLineVariantID = 2872,
     spellID = 423332,
@@ -371,7 +371,7 @@ Data.Professions = {
     catchUpItemID = 228726,
   },
   {
-    name = "Enchanting",
+    name = C_TradeSkillUI.GetTradeSkillDisplayName(333),
     skillLineID = 333,
     skillLineVariantID = 2874,
     spellID = 423334,
@@ -380,7 +380,7 @@ Data.Professions = {
     catchUpItemID = 227662,
   },
   {
-    name = "Engineering",
+    name = C_TradeSkillUI.GetTradeSkillDisplayName(202),
     skillLineID = 202,
     skillLineVariantID = 2875,
     spellID = 423335,
@@ -389,7 +389,7 @@ Data.Professions = {
     catchUpItemID = 228730,
   },
   {
-    name = "Herbalism",
+    name = C_TradeSkillUI.GetTradeSkillDisplayName(182),
     skillLineID = 182,
     skillLineVariantID = 2877,
     spellID = 441327,
@@ -398,7 +398,7 @@ Data.Professions = {
     catchUpItemID = 224835,
   },
   {
-    name = "Inscription",
+    name = C_TradeSkillUI.GetTradeSkillDisplayName(773),
     skillLineID = 773,
     skillLineVariantID = 2878,
     spellID = 423338,
@@ -407,7 +407,7 @@ Data.Professions = {
     catchUpItemID = 228732,
   },
   {
-    name = "Jewelcrafting",
+    name = C_TradeSkillUI.GetTradeSkillDisplayName(755),
     skillLineID = 755,
     skillLineVariantID = 2879,
     spellID = 423339,
@@ -416,7 +416,7 @@ Data.Professions = {
     catchUpItemID = 228734,
   },
   {
-    name = "Leatherworking",
+    name = C_TradeSkillUI.GetTradeSkillDisplayName(165),
     skillLineID = 165,
     skillLineVariantID = 2880,
     spellID = 423340,
@@ -425,7 +425,7 @@ Data.Professions = {
     catchUpItemID = 228736,
   },
   {
-    name = "Mining",
+    name = C_TradeSkillUI.GetTradeSkillDisplayName(186),
     skillLineID = 186,
     skillLineVariantID = 2881,
     spellID = 423341,
@@ -434,7 +434,7 @@ Data.Professions = {
     catchUpItemID = 224838,
   },
   {
-    name = "Skinning",
+    name = C_TradeSkillUI.GetTradeSkillDisplayName(393),
     skillLineID = 393,
     skillLineVariantID = 2882,
     spellID = 423342,
@@ -443,7 +443,7 @@ Data.Professions = {
     catchUpItemID = 224782,
   },
   {
-    name = "Tailoring",
+    name = C_TradeSkillUI.GetTradeSkillDisplayName(197),
     skillLineID = 197,
     skillLineVariantID = 2883,
     spellID = 423343,
