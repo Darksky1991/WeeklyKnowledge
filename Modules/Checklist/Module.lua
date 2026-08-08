@@ -7,6 +7,7 @@ addon.Checklist = Checklist
 
 local Main = addon.Main
 local Constants = addon.Constants
+local L = addon.L
 local Data = addon.Data
 local LiqUI = addon.libs.LiqUI
 local TableContains = LiqUI.Utils.TableContains
@@ -121,7 +122,7 @@ function Checklist:Render()
     self.window = LiqUI:NewElement("Window", {
       name = addon.name .. "Checklist",
       storage = windows.Checklist,
-      title = "Checklist",
+      title = L["TITLE_CHECKLIST"],
       icon = mediaPath .. "Icon.blp",
       border = 4,
       overlayFontObject = "SystemFont_Med1",
@@ -130,7 +131,7 @@ function Checklist:Render()
       end,
       onSettingsMenu = function(window, rootMenu)
         local showFullProfessionName = rootMenu:CreateCheckbox(
-          "Show full profession name",
+          L["SETTING_SHOW_FULL_PROFESSION_NAME"],
           function() return Data.db.global.showFullProfessionName end,
           function()
             Data.db.global.showFullProfessionName = not Data.db.global.showFullProfessionName
@@ -142,11 +143,11 @@ function Checklist:Render()
         )
         showFullProfessionName:SetTooltip(function(tooltip, elementDescription)
           GameTooltip_SetTitle(tooltip, MenuUtil.GetElementText(elementDescription))
-          GameTooltip_AddNormalLine(tooltip, "Show the full profession name with the expansion variant.")
+          GameTooltip_AddNormalLine(tooltip, L["SETTING_SHOW_FULL_PROFESSION_NAME_TOOLTIP"])
         end)
 
         rootMenu:CreateCheckbox(
-          "Hide in combat",
+          L["SETTING_HIDE_IN_COMBAT"],
           function() return Data.db.global.checklist.hideInCombat end,
           function()
             Data.db.global.checklist.hideInCombat = not Data.db.global.checklist.hideInCombat
@@ -154,7 +155,7 @@ function Checklist:Render()
           end
         )
         rootMenu:CreateCheckbox(
-          "Hide in dungeons",
+          L["SETTING_HIDE_IN_DUNGEONS"],
           function() return Data.db.global.checklist.hideInDungeons end,
           function()
             Data.db.global.checklist.hideInDungeons = not Data.db.global.checklist.hideInDungeons
@@ -162,7 +163,7 @@ function Checklist:Render()
           end
         )
         rootMenu:CreateCheckbox(
-          "Hide completed objectives",
+          L["SETTING_HIDE_COMPLETED_OBJECTIVES"],
           function() return Data.db.global.checklist.hideCompletedObjectives end,
           function()
             Data.db.global.checklist.hideCompletedObjectives = not Data.db.global.checklist.hideCompletedObjectives
@@ -175,12 +176,12 @@ function Checklist:Render()
           name = "Expansion",
           icon = mediaPath .. "Icon_House.blp",
           iconSize = 14,
-          tooltipTitle = "Expansion",
-          tooltipDescription = "Filter table by expansion.",
+          tooltipTitle = L["TITLEBAR_EXPANSION"],
+          tooltipDescription = L["TITLEBAR_EXPANSION_CHECKLIST_TOOLTIP"],
           onMenu = function(_, rootMenu)
             TableForEach(Data:GetExpansions(), function(expansion)
               rootMenu:CreateCheckbox(
-                expansion.name,
+                Data:GetExpansionDisplayName(expansion),
                 function() return TableContains(Data.db.global.checklist.selectedExpansions, expansion.id) end,
                 function()
                   Data.db.global.checklist.selectedExpansions = TableToggle(Data.db.global.checklist.selectedExpansions, expansion.id)
@@ -194,8 +195,8 @@ function Checklist:Render()
         {
           name = "Columns",
           icon = mediaPath .. "Icon_Columns.blp",
-          tooltipTitle = "Columns",
-          tooltipDescription = "Toggle columns.",
+          tooltipTitle = L["TITLEBAR_COLUMNS"],
+          tooltipDescription = L["TITLEBAR_COLUMNS_CHECKLIST_TOOLTIP"],
           onMenu = function(_, rootMenu)
             local window = self.window
             if not window then
@@ -224,8 +225,8 @@ function Checklist:Render()
           name = "Categories",
           icon = mediaPath .. "Icon_Category.blp",
           iconSize = 11,
-          tooltipTitle = "Categories",
-          tooltipDescription = "Toggle categories.",
+          tooltipTitle = L["TITLEBAR_CATEGORIES"],
+          tooltipDescription = L["TITLEBAR_CATEGORIES_TOOLTIP"],
           onMenu = function(_, rootMenu)
             local hidden = Data.db.global.checklist.hiddenCategories
             TableForEach(Data.ObjectiveCategories, function(category)
@@ -245,8 +246,8 @@ function Checklist:Render()
           name = "Toggle",
           icon = mediaPath .. "Icon_Toggle.blp",
           iconSize = 16,
-          tooltipTitle = "Toggle List",
-          tooltipDescription = "Expand/Collapse the checklist.",
+          tooltipTitle = L["TITLEBAR_TOGGLE"],
+          tooltipDescription = L["TITLEBAR_TOGGLE_TOOLTIP"],
           onClick = function()
             Data.db.global.checklist.hideTable = not Data.db.global.checklist.hideTable
             self:Render()
