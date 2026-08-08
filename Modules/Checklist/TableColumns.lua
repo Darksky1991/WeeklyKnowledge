@@ -247,6 +247,8 @@ function TableColumns.GetDefinitions()
       id = "waypoint",
       headerText = "",
       width = 50,
+      minWidth = 40,
+      maxWidth = 60,
       align = "CENTER",
       sorting = {
         enabled = false,
