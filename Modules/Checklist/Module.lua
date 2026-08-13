@@ -9,12 +9,12 @@ local Main = addon.Main
 local Constants = addon.Constants
 local L = addon.L
 local Data = addon.Data
-local LibLiqUI = addon.libs.LiqUI
-local TableContains = LibLiqUI.Utils.TableContains
-local TableCount = LibLiqUI.Utils.TableCount
-local TableFilter = LibLiqUI.Utils.TableFilter
-local TableForEach = LibLiqUI.Utils.TableForEach
-local TableToggle = LibLiqUI.Utils.TableToggle
+local LiqUI = addon.libs.LiqUI
+local TableContains = LiqUI.Utils.TableContains
+local TableCount = LiqUI.Utils.TableCount
+local TableFilter = LiqUI.Utils.TableFilter
+local TableForEach = LiqUI.Utils.TableForEach
+local TableToggle = LiqUI.Utils.TableToggle
 
 ---@param objectiveA table
 ---@param objectiveB table
@@ -32,7 +32,7 @@ local function checklistObjectiveIdentityLess(objectiveA, objectiveB)
   return (objectiveA.itemID or 0) < (objectiveB.itemID or 0)
 end
 
----@param row LiqUI_TableDataRowExtended
+---@param row WK_TableRowData
 ---@return string
 local function checklistObjectiveRowSortText(row)
   local objective = row.objective
@@ -73,6 +73,31 @@ local function checklistObjectiveRowSortText(row)
   return "Unknown"
 end
 
+---@param rowA WK_TableRowData
+---@param rowB WK_TableRowData
+---@return boolean
+local function compareChecklistDefault(rowA, rowB)
+  if not rowA or not rowB then return false end
+  local progressA, progressB = rowA.progress, rowB.progress
+  local questsCompletedA = progressA and (progressA.questsCompleted or 0) or 0
+  local questsCompletedB = progressB and (progressB.questsCompleted or 0) or 0
+  if questsCompletedA ~= questsCompletedB then
+    return questsCompletedA > questsCompletedB
+  end
+  local pointsEarnedA = progressA and (progressA.pointsEarned or 0) or 0
+  local pointsEarnedB = progressB and (progressB.pointsEarned or 0) or 0
+  if pointsEarnedA ~= pointsEarnedB then
+    return pointsEarnedA > pointsEarnedB
+  end
+  local labelCompare = strcmputf8i(checklistObjectiveRowSortText(rowA), checklistObjectiveRowSortText(rowB))
+  if labelCompare ~= 0 then
+    return labelCompare < 0
+  end
+  local objectiveA, objectiveB = rowA.objective, rowB.objective
+  if not objectiveA or not objectiveB then return false end
+  return checklistObjectiveIdentityLess(objectiveA, objectiveB)
+end
+
 function Checklist:ToggleWindow()
   if not self.window then return end
   if self.window:IsVisible() then
@@ -94,8 +119,8 @@ function Checklist:ApplyWindowTableSize()
   local maxBodyHeight = 300 - Constants.TITLEBAR_HEIGHT
   local getTableContentSize = self.window.table.GetContentSize or self.window.table.GetSize
   local contentWidth, contentHeight = getTableContentSize(self.window.table)
-  local maxBodyWidth = UIParent:GetWidth() - LibLiqUI.Constants.layout.sizes.maxWindowWidthMargin
-  local scrollbarThickness = LibLiqUI.Constants.layout.sizes.scrollbar.thickness or 10
+  local maxBodyWidth = UIParent:GetWidth() - LiqUI.Constants.layout.sizes.maxWindowWidthMargin
+  local scrollbarThickness = LiqUI.Constants.layout.sizes.scrollbar.thickness or 10
   local bodyWidth = math.min(math.max(contentWidth, minWindowWidth), maxBodyWidth)
   local bodyHeight = math.min(contentHeight, maxBodyHeight)
   if contentWidth > bodyWidth then
@@ -118,7 +143,7 @@ function Checklist:Render()
     local mediaPath = "Interface/AddOns/WeeklyKnowledge/Media/"
     local windows = Data.db.global.liqui.windows
     local tables = Data.db.global.liqui.tables
-    self.window = LibLiqUI:NewElement("Window", {
+    self.window = LiqUI:NewElement("Window", {
       name = addon.name .. "Checklist",
       storage = windows.Checklist,
       title = L["TITLE_CHECKLIST"],
@@ -197,7 +222,15 @@ function Checklist:Render()
           tooltipTitle = L["TITLEBAR_COLUMNS"],
           tooltipDescription = L["TITLEBAR_COLUMNS_CHECKLIST_TOOLTIP"],
           onMenu = function(_, rootMenu)
-            local hidden = self.window.table.db.hiddenColumns
+            local window = self.window
+            if not window then
+              return
+            end
+            local tableFrame = window.table
+            if not tableFrame then
+              return
+            end
+            local hidden = tableFrame.db.hiddenColumns
             TableForEach(self:GetColumnDefinitions(), function(column)
               if not column.hideable then return end
               rootMenu:CreateCheckbox(
@@ -270,27 +303,7 @@ function Checklist:Render()
       sorting = {
         enabled = true,
         defaultOrder = "desc",
-        defaultCompare = function(rowA, rowB)
-          if not rowA or not rowB then return false end
-          local progressA, progressB = rowA.progress, rowB.progress
-          local questsCompletedA = progressA and (progressA.questsCompleted or 0) or 0
-          local questsCompletedB = progressB and (progressB.questsCompleted or 0) or 0
-          if questsCompletedA ~= questsCompletedB then
-            return questsCompletedA > questsCompletedB
-          end
-          local pointsEarnedA = progressA and (progressA.pointsEarned or 0) or 0
-          local pointsEarnedB = progressB and (progressB.pointsEarned or 0) or 0
-          if pointsEarnedA ~= pointsEarnedB then
-            return pointsEarnedA > pointsEarnedB
-          end
-          local labelCompare = strcmputf8i(checklistObjectiveRowSortText(rowA), checklistObjectiveRowSortText(rowB))
-          if labelCompare ~= 0 then
-            return labelCompare < 0
-          end
-          local objectiveA, objectiveB = rowA.objective, rowB.objective
-          if not objectiveA or not objectiveB then return false end
-          return checklistObjectiveIdentityLess(objectiveA, objectiveB)
-        end,
+        defaultCompare = compareChecklistDefault,
       },
       scroll = {
         horizontal = true,
@@ -300,20 +313,29 @@ function Checklist:Render()
       end,
       columns = self:GetColumnDefinitions(),
     }
-    self.window.table = LibLiqUI:NewElement("Table", tableConfig)
+    self.window.table = LiqUI:NewElement("Table", tableConfig)
     self.window.table:SetParent(self.window.body)
     self.window.table:SetPoint("TOPLEFT", self.window.body, "TOPLEFT", 0, 0)
     self.window.table:SetPoint("BOTTOMRIGHT", self.window.body, "BOTTOMRIGHT", 0, 0)
   end
 
+  local window = self.window
+  if not window then
+    return
+  end
+  local tableFrame = window.table
+  if not tableFrame then
+    return
+  end
+
   if not character then
-    self.window:Hide()
+    window:Hide()
     return
   end
 
   -- Quick hotfix to avoid excessive rendering
-  if (not self.window:IsVisible() and not Data.db.global.checklist.open) or (Data.cache.inCombat and Data.db.global.checklist.hideInCombat) then
-    self.window:Hide()
+  if (not window:IsVisible() and not Data.db.global.checklist.open) or (Data.cache.inCombat and Data.db.global.checklist.hideInCombat) then
+    window:Hide()
     return
   end
 
@@ -373,31 +395,29 @@ function Checklist:Render()
     end)
   end
 
-  self.window.table:SetData(rows)
+  tableFrame:SetData(rows)
 
   local minWindowWidth = 200
   local emptyBodyHeight = 200 - Constants.TITLEBAR_HEIGHT
 
   if Data.db.global.checklist.hideTable then
-    self.window.table:Hide()
-    self.window:HideOverlay()
-    self.window:SetBodySize(minWindowWidth, 0)
+    tableFrame:Hide()
+    window:HideOverlay()
+    window:SetBodySize(minWindowWidth, 0)
   elseif rowCount == 0 then
-    self.window:ShowOverlay("It does not look like you have any active professions.\nDid you maybe filter out the wrong expansion or category above?\n\nIf this is your first time using this addon then make sure to open your professions at least once.")
-    self.window.table:Hide()
-    self.window:SetBodySize(minWindowWidth, emptyBodyHeight)
+    window:ShowOverlay("It does not look like you have any active professions.\nDid you maybe filter out the wrong expansion or category above?\n\nIf this is your first time using this addon then make sure to open your professions at least once.")
+    tableFrame:Hide()
+    window:SetBodySize(minWindowWidth, emptyBodyHeight)
   else
-    self.window:HideOverlay()
-    self.window.table:Show()
+    window:HideOverlay()
+    tableFrame:Show()
     self:ApplyWindowTableSize()
   end
 
-  self.window:SetShown(Data.db.global.checklist.open)
-  if self.window.titlebar then
-    self.window.titlebar:SetShown(Data.db.global.checklist.windowTitlebar)
-  end
+  window:SetShown(Data.db.global.checklist.open)
+  window.titlebar:SetShown(Data.db.global.checklist.windowTitlebar)
   if Data.cache.inCombat and Data.db.global.checklist.hideInCombat then
-    self.window:Hide()
+    window:Hide()
   end
 end
 
